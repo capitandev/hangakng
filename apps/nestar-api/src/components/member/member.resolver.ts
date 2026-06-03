@@ -107,36 +107,34 @@ export class MemberResolver {
      return await this.memberService.updateMemberByAdmin(input);
    }
 
- // IMAGE UPLOADER 
- @UseGuards(AuthGuard)
- @Mutation(() => {
-  return String;
-})
- public async imageUploader(
-   @Args({ name: 'file', type: () => GraphQLUpload })
- { createReadStream, filename, mimetype }: FileUpload,
- @Args('target') target: String,
- ): Promise<string> {
-   console.log('Mutation: imageUploader');
- 
-   if (!filename) throw new Error(Message.UPLOAD_FAILED);
- const validMime = validMimeTypes.includes(mimetype);
- if (!validMime) throw new Error(Message.PROVIDE_ALLOWED_FORMAT);
- 
- const imageName = getSerialForImage(filename);
- const url = `uploads/${target}/${imageName}`;
- const stream = createReadStream();
- 
- const result = await new Promise((resolve, reject) => {
-   stream
-     .pipe(createWriteStream(url))
-     .on('finish', async () => resolve(true))
-     .on('error', () => reject(false));
- });
- if (!result) throw new Error(Message.UPLOAD_FAILED);
- 
- return url;
- }
+ /// IMAGE UPLOADER 
+@UseGuards(AuthGuard)
+@Mutation(() => String)
+public async imageUploader(
+  @Args({ name: 'file', type: () => GraphQLUpload })
+  { createReadStream, filename, mimetype }: FileUpload,
+  @Args('target') target: String,
+): Promise<string> {
+  console.log('Mutation: imageUploader');
+
+  if (!filename) throw new Error(Message.UPLOAD_FAILED);
+  const validMime = validMimeTypes.includes(mimetype);
+  if (!validMime) throw new Error(Message.PROVIDE_ALLOWED_FORMAT);
+
+  const imageName = getSerialForImage(filename);
+  const url = `uploads/${target}/${imageName}`;
+  const stream = createReadStream();
+
+  const result = await new Promise((resolve, reject) => {
+    stream
+      .pipe(createWriteStream(url))
+      .on('finish', async () => resolve(true))
+      .on('error', () => reject(false));
+  });
+  if (!result) throw new Error(Message.UPLOAD_FAILED);
+
+  return url;
+}
  
  @UseGuards(AuthGuard)
  @Mutation(() => [String])
