@@ -19,7 +19,7 @@ import { SocketModule } from './socket/socket.module';
       uploads: false,
       autoSchemaFile: true,
       formatError: (error: T) => {
-        // console.log('error:', error);
+        console.log('Full error:', JSON.stringify(error, null, 2));
         const graphQLFormattedError = {
           code: error?.extensions?.code,
           message:
@@ -27,7 +27,7 @@ import { SocketModule } from './socket/socket.module';
             error?.extensions?.response?.message ||
             error?.message,
         };
-        console.log(' graphQLFormattedError:', graphQLFormattedError);
+        console.log('graphQLFormattedError:', graphQLFormattedError);
         return graphQLFormattedError;
       },
     }),
